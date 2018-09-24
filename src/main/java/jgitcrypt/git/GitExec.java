@@ -1,10 +1,13 @@
 package jgitcrypt.git;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+@Slf4j
 class GitExec {
     private boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
     private String pathExecGit;
@@ -47,8 +50,8 @@ class GitExec {
                     "*.asc";
             Files.write(Paths.get(path + "/.gitignore"), fileData.getBytes());
             Thread.sleep(1000);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
     }
 
@@ -72,7 +75,7 @@ class GitExec {
                     var_command[2] = this.pathExecGit + " " +command;
                 }
             }
-            System.out.println("Command:" + Arrays.toString(var_command));
+            log.info("Command:" + Arrays.toString(var_command));
             //////////////////
             Process p = new ProcessBuilder().command(var_command).inheritIO().start();
 
@@ -84,16 +87,16 @@ class GitExec {
                 result = bis.read();
             }
             bis.close();
-            System.out.println("Response: "+buf.toString("UTF-8"));
+            log.info("Response: "+buf.toString("UTF-8"));
             try {
                 p.waitFor();
             }catch (InterruptedException e) {
-                System.err.println("process was interrupted");
+                log.error("process was interrupted");
             }
             if (p.exitValue() != 0)
-                System.out.format("JGitCrypt Exit was non-zero %d %n",p.exitValue());
+                log.info("JGitCrypt Exit was non-zero %d %n",p.exitValue());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
