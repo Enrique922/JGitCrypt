@@ -25,10 +25,8 @@ public class RSAKeyPairGenerator {
                                       OutputStream paramOutputStream2,
                                       String id,
                                       char[] password,
-                                      boolean armor,KeyPairGenerator paramKeyPairGenerator) throws IOException, PGPException {
-        if (armor) {
-            paramOutputStream1 = new ArmoredOutputStream(paramOutputStream1);
-        }
+                                      KeyPairGenerator paramKeyPairGenerator) throws IOException, PGPException {
+
         PGPDigestCalculator sha1Calc = new JcaPGPDigestCalculatorProviderBuilder().build().get(HashAlgorithmTags.SHA1);
         PGPKeyPair keyPair = new JcaPGPKeyPair(PGPPublicKey.RSA_GENERAL, paramKeyPairGenerator.generateKeyPair(), new Date());
         PGPSecretKey localPGPSecretKey = new PGPSecretKey(PGPSignature.DEFAULT_CERTIFICATION, keyPair,
@@ -39,9 +37,7 @@ public class RSAKeyPairGenerator {
                         .build(password));
         localPGPSecretKey.encode(paramOutputStream1);
         paramOutputStream1.close();
-        if (armor) {
-            paramOutputStream2 = new ArmoredOutputStream(paramOutputStream2);
-        }
+
         PGPPublicKey localPGPPublicKey = localPGPSecretKey.getPublicKey();
         localPGPPublicKey.encode(paramOutputStream2);
         paramOutputStream2.close();
@@ -57,7 +53,6 @@ public class RSAKeyPairGenerator {
                         createKey.getPathKeys() + Constants.NAME_PUBLIC_KEY),
                 createKey.getId(),
                 createKey.getPassword().toCharArray(),
-                false,//createKey.isArmor(),
                 localKeyPairGenerator);
         return createKey.getPathKeys() + Constants.NAME_PUBLIC_KEY;
     }

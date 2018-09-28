@@ -23,16 +23,6 @@ public class CreateKey {
      */
     private String pathKeys;
 
-    /**
-     * Encode the input data producing a base 64 encoded byte array.
-     * Codificar los archivos en base 64 y con cabecera de firma BCPG;
-     * -----BEGIN PGP MESSAGE-----
-     *  Version: BCPG v1.46.
-     *  XXX
-     *-----END PGP MESSAGE-----
-     * @parameter
-     */
-    private boolean armor;
 
     public String getId() {
         return id;
@@ -56,13 +46,5 @@ public class CreateKey {
 
     public void setPathKeys(String pathKeys) {
         this.pathKeys = pathKeys;
-    }
-
-    public boolean isArmor() {
-        return armor;
-    }
-
-    public void setArmor(boolean armor) {
-        this.armor = armor;
     }
 }

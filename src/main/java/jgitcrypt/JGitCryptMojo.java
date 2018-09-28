@@ -84,6 +84,13 @@ public class JGitCryptMojo extends AbstractMojo {
      */
     private jgitcrypt.type.Git git;
 
+    /**
+     * Extensions Files to encrypt.
+     *
+     * @parameter
+     */
+    private String extensionsFiles;
+
 
     public void execute() throws MojoExecutionException {
         Security.addProvider(new BouncyCastleProvider());
@@ -144,8 +151,8 @@ public class JGitCryptMojo extends AbstractMojo {
                     PGPEncrypt.decryptFileJavaBPG(password,
                             Streams.readAll(new FileInputStream(fileIn.getAbsolutePath())),
                             keyPrivateFile,
-                            fileIn.getAbsolutePath().replace(Constants.EXTENSIONS_FILES,""),// + Constants.DECRYPT_EXTENSIONS_FILES,
-                            true);
+                            fileIn.getAbsolutePath().replace(Constants.EXTENSIONS_FILES,"")// + Constants.DECRYPT_EXTENSIONS_FILES,
+                            );
                 } catch (IOException | PGPException e) {
                     getLog().error(e);
                 }
@@ -155,17 +162,17 @@ public class JGitCryptMojo extends AbstractMojo {
 
     /////////////////////////
     private void findAndSignFilesJava(final File folder) {
+        extensionsFiles = extensionsFiles == null ? ".java" : "."+extensionsFiles;
         for (final File fileIn : folder.listFiles()) {
             if (fileIn.isDirectory()) {
                 findAndSignFilesJava(fileIn);
-            } else if (fileIn.getName().endsWith(".java")) {
+            } else if (fileIn.getName().endsWith(extensionsFiles/*".java"*/)) {
                 getLog().info("Signing File Java: " + fileIn.getName());
                 try {
                     PGPEncrypt.signAndEncryptFile(
                             Streams.readAll(new FileInputStream(fileIn.getAbsolutePath())),
                             PGPJUtil.readPublicKey(keyPublicFile),
-                            fileIn.getAbsolutePath() + Constants.EXTENSIONS_FILES,
-                            false);
+                            fileIn.getAbsolutePath() + Constants.EXTENSIONS_FILES);
                 } catch (IOException | PGPException e) {
                     getLog().error(e);
                 }

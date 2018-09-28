@@ -87,23 +87,18 @@ public class PGPEncrypt {
         keyIn.close();
     }
 
-    static void decryptFileJavaBPG(String password, byte[] clearData, String pgpSecretKey, String fileName,
-                                   boolean armor) throws IOException, PGPException {
+    static void decryptFileJavaBPG(String password, byte[] clearData, String pgpSecretKey, String fileName) throws IOException, PGPException {
         decrypt(clearData, new FileInputStream(pgpSecretKey), password.toCharArray(), fileName);
     }
 
     static void signAndEncryptFile(byte[] clearData,
                                    PGPPublicKey encKey,
-                                   String fileName,
-                                   boolean armor) throws IOException, PGPException {
+                                   String fileName) throws IOException, PGPException {
         if (fileName == null) {
             fileName = PGPLiteralData.CONSOLE;
         }
 
         try (OutputStream out = new BufferedOutputStream(new FileOutputStream(fileName))) {
-            /*if (armor) {
-                out = new ArmoredOutputStream(out);
-            }*/
             PGPCompressedDataGenerator comData = new PGPCompressedDataGenerator(PGPCompressedDataGenerator.UNCOMPRESSED);
 
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
