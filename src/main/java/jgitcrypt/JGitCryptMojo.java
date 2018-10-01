@@ -167,7 +167,7 @@ public class JGitCryptMojo extends AbstractMojo {
             if (fileIn.isDirectory()) {
                 findAndSignFilesJava(fileIn);
             } else if (fileIn.getName().endsWith(extensionsFiles/*".java"*/) || extensionsFiles.equals(".*")) {
-                getLog().info("Signing File Java: " + fileIn.getName());
+                getLog().info("Signing File: " + fileIn.getName());
                 try {
                     PGPEncrypt.signAndEncryptFile(
                             Streams.readAll(new FileInputStream(fileIn.getAbsolutePath())),
